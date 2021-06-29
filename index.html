@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Grocery List 🛍</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Abel&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/e59b74d40d.js" crossorigin="anonymous"></script>
+</head>
+
+<body>
+    <style>
+        body {
+            height: 100%;
+            margin: 0;
+            background: #d6ffd9;
+            font-family: 'Poppins', sans-serif;
+            overflow: auto;
+            background-image: url("fruits.png");
+        }
+        
+        .container {
+            text-align: center;
+            width: 26%;
+            margin: 0px auto;
+            background: #ffffffe0;
+            padding: 0 20px;
+            box-shadow: 6px 10px 12px 0px #494748;
+            border-radius: 10px;
+        }
+        
+        .title p {
+            font-size: 3.2em;
+            color: #3ba247;
+            border-bottom: #3ba247 3px solid;
+            font-family: 'Abel', sans-serif;
+        }
+        
+        .inputBox {
+            padding-left: 10px;
+            color: #000000;
+            font-family: 'Poppins', sans-serif;
+            height: 5vh;
+            width: 43vh;
+            font-size: 20px;
+            margin-right: 3px;
+        }
+        
+        .add {
+            height: 5.4vh;
+            width: 6vh;
+            font-size: 2.5em;
+            background-color: white;
+            color: #3ba247;
+            -webkit-text-stroke: 1px black;
+            font-family: fantasy;
+        }
+        
+        .add:hover {
+            cursor: pointer;
+            transition: 0.3s;
+            background-color: #3ca348;
+            border: white 1px solid;
+            color: white;
+        }
+        
+        .inputBox:focus-within {
+            outline: none;
+        }
+        
+        .inputBox,
+        .add {
+            border: 1px solid #3ca348;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+        
+        .bagEmoji {
+            color: #3ca348;
+            font-size: 91px;
+            -webkit-text-stroke: 1px black;
+        }
+        
+        .item {
+            text-align: center;
+            color: black;
+            border: 1px solid black;
+            margin-bottom: 10px;
+            font-size: 1.3em;
+            text-transform: lowercase;
+            width: 80%;
+            border-radius: 5px;
+            padding: 5px;
+        }
+        
+        .groceryList {
+            overflow-y: auto;
+            padding: 5px;
+            overflow-x: hidden;
+            height: 47vh;
+        }
+        
+        .groceryList::-webkit-scrollbar {
+            width: 7px;
+        }
+        
+        .groceryList::-webkit-scrollbar-thumb {
+            background: #b3d241;
+            border-radius: 5px;
+        }
+        
+        .item:first-letter {
+            text-transform: capitalize;
+        }
+        
+        .item-div {
+            display: flex;
+        }
+        
+        .action-icon {
+            font-size: 1.8em;
+            padding: 10px;
+        }
+        
+        .action-icon:hover {
+            cursor: pointer;
+            opacity: 0.5;
+        }
+        
+        .complete-btn {
+            color: #479f4d;
+        }
+        
+        .delete-btn {
+            padding-right: 15px;
+            color: red;
+        }
+        
+        .complete {
+            text-decoration: line-through;
+        }
+        
+        .stats {
+            text-align: left;
+            padding: 5px;
+            font-size: 1.2em;
+        }
+        
+        @media only screen and (max-width: 1766px) {
+            .container {
+                width: 40%;
+            }
+            .inputBox {
+                margin: 0 5px;
+            }
+        }
+        
+        @media only screen and (max-width: 1120px) {
+            .container {
+                width: 80%;
+            }
+            .item-div {
+                width: 90%;
+                margin: 0 auto;
+            }
+        }
+        
+        @media only screen and (max-width: 550px) {
+            .inputBox {
+                width: 90%;
+            }
+            .groceryList {
+                height: 40vh;
+            }
+            .item-div {
+                width: 90%;
+                margin: 0 auto;
+            }
+        }
+    </style>
+    <div class="container">
+
+        <div class="title">
+            <p>My Grocery List <span class="bagEmoji">🛍</span></p>
+        </div>
+        <div style="display: inline-flex;">
+            <div>
+                <input type="text" class="inputBox" id="inputBox" maxlength="16">
+            </div>
+
+            <div>
+                <button onclick="add(this)" class="add" id="add">+</button>
+            </div>
+        </div>
+
+        <div class="groceryList " id="groceryList">
+        </div>
+
+        <div class="stats">
+            <p>Total Items: <span id="total">0</span></p>
+            <p>Completed Items: <span id="completed">0</span></p>
+        </div>
+    </div>
+
+    <script>
+        var inputBox = document.getElementById('inputBox')
+
+        function add() {
+            if (inputBox.value) {
+                var itemDiv = document.createElement('div');
+                itemDiv.classList.add('item-div')
+
+                var div = document.createElement('div');
+                div.classList.add('item');
+                div.innerHTML = inputBox.value;
+
+                itemDiv.appendChild(div);
+
+                itemDiv.innerHTML += '<i class="fas fa-clipboard-check action-icon complete-btn" onclick="completeItem(this)"></i><i class="far fa-trash-alt action-icon delete-btn"  onclick="deleteItem(this)"></i>'
+
+                document.getElementById('groceryList').appendChild(itemDiv);
+                inputBox.value = '';
+                inputBox.focus();
+
+                updateCount();
+            }
+        }
+
+        function completeItem(e) {
+
+            var item = e.previousElementSibling;
+
+            if (item.classList.contains('complete')) {
+                item.classList.remove('complete');
+            } else {
+                item.classList.add('complete');
+            }
+
+            updateCount();
+
+        }
+
+        function deleteItem(e) {
+            var parent = e.parentElement;
+            parent.remove();
+            updateCount();
+        }
+
+        function updateCount() {
+            document.getElementById('total').innerHTML = document.getElementsByClassName('item-div').length;
+            document.getElementById('completed').innerHTML = document.getElementsByClassName('complete').length;
+        }
+
+        inputBox.addEventListener("keyup", function(event) {
+            if (event.keyCode === 13) {
+                document.getElementById("add").click();
+            }
+        })
+    </script>
+
+</body>
+
+</html>
